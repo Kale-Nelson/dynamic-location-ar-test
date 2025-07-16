@@ -2,30 +2,34 @@ window.addEventListener("load", () => {
   const button = document.querySelector('button[data-action="change"]');
   button.innerText = "﹖";
 
-  renderModelInFront();
+  renderModelInLocation();
   button.addEventListener("click", changeModel);
 });
 
-var currentEntity = null;
-function renderModelInFront() {
-  let scene = document.querySelector("a-scene");
-  if (currentEntity) {
-    scene.removeChild(currentEntity);
+function renderModelInLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      const scene = document.querySelector("a-scene");
+      const model = document.createElement("a-entity");
+      model.setAttribute(
+        "gps-entity-place",
+        `latitude: ${latitude}; longitude: ${longitude};`
+      );
+      setModel(models[modelIndex], model);
+      model.setAttribute("animation-mixer", "");
+      scene.appendChild(model);
+    });
   }
-
-  let model = document.createElement("a-entity");
-  model.setAttribute("position", "0 0 -3");
-  setModel(models[modelIndex], model);
-  model.setAttribute("animation-mixer", "");
-
-  let camera = document.querySelector("a-camera");
-  camera.appendChild(model);
-  currentEntity = model;
 }
+
+var currentEntity = null;
 
 function changeModel() {
   modelIndex = (modelIndex + 1) % models.length;
-  renderModelInFront();
+  renderModelInLocation();
 }
 
 var models = [
@@ -57,7 +61,12 @@ var setModel = function (model, entity) {
   if (model.rotation) {
     entity.setAttribute("rotation", model.rotation);
   }
+  if (model.position) {
+    entity.setAttribute("position", model.position);
+  }
+
   entity.setAttribute("gltf-model", model.url);
+
   const div = document.querySelector(".instructions");
   div.innerText = model.info;
 };
