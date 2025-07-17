@@ -24,8 +24,19 @@
     >
       <a-camera gps-camera rotation-reader></a-camera>
     </a-scene>
+    <div class="compass">
+      <div></div>
+      <button class="direction-button" onclick="moveOffset(1, 0)">N</button>
+      <div></div>
+      <button class="direction-button" onclick="moveOffset(0, -1)">W</button>
+      <button class="direction-button" onclick="resetOffset()">C</button>
+      <button class="direction-button" onclick="moveOffset(0, 1)">E</button>
+      <div></div>
+      <button class="direction-button" onclick="moveOffset(-1, 0)">S</button>
+      <div></div>
+    </div>
     <div class="centered">
-      <button data-action="change"></button>
+      <button class="randomize-button" data-action="change"></button>
     </div>
   </body>
 </html>
