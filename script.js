@@ -31,11 +31,19 @@ window.addEventListener("load", () => {
   button.innerText = "﹖";
 
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position) => {
-      startingLatitude = position.coords.latitude;
-      startingLongitude = position.coords.longitude;
-      renderModelInLocation();
-    });
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        startingLatitude = position.coords.latitude;
+        startingLongitude = position.coords.longitude;
+        renderModelInLocation();
+        document
+          .querySelectorAll(".direction-button, .randomize-button")
+          .forEach((btn) => (btn.disabled = false));
+      },
+      () => {
+        alert("Could not get GPS location. Please enable location services.");
+      }
+    );
   }
 
   button.addEventListener("click", () => {
@@ -43,10 +51,12 @@ window.addEventListener("load", () => {
   });
 
   document.querySelectorAll(".direction-button").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      setTimeout(updateModelPosition, 0);
-    });
+    btn.addEventListener("click", (e) => {});
   });
+
+  document
+    .querySelectorAll(".direction-button, .randomize-button")
+    .forEach((btn) => (btn.disabled = true));
 });
 
 function moveOffset(north, east) {
